@@ -31,4 +31,4 @@ build/
 .vscode/
 
 ### Postgres configuration ###
-/src/main/resources/application.properties
+*.properties
