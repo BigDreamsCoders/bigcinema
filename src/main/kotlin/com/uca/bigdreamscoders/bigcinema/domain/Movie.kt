@@ -26,7 +26,7 @@ data class Movie (
         var imageUrl : String = ""
 )
 {
-    override fun toString(): String = "Movie{" +
+    override fun toString(): String = "Movie{cor=$movCor" +
             "id = $movId , name = $name, actStatus = $actStatus," +
             "description = $description, imageUrl = $imageUrl}"
 }

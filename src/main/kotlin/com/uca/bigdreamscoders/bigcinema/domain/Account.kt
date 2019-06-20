@@ -61,7 +61,7 @@ data class Account (
 
 )
 {
-    override fun toString(): String = "Account{id = $accId , name = $name, lastname= $lastname" +
+    override fun toString(): String = "Account{cor=$accCor, id = $accId , name = $name, lastname= $lastname" +
             "province = $province, role = $accRole, accActive = $accActive, loged = $actSession" +
             "reason = $inacReason, dateBirth = $dateBirth, age = $age, balance = $accBalance," +
             "address = $address }"

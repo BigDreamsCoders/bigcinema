@@ -25,5 +25,5 @@ data class Province (
         var proName : String = ""
 )
 {
-    override fun toString(): String = "Province{id = $proId , name = $proName, state = $state}"
+    override fun toString(): String = "Province{cor=$proCor,id = $proId , name = $proName, state = $state}"
 }

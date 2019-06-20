@@ -42,7 +42,7 @@ data class Reservation(
         var dateReserved : Date
 )
 {
-    override fun toString(): String = "Reservation{id = $resId , account = $account, listing = $listing" +
+    override fun toString(): String = "Reservation{cor=$resCor, id = $resId , account = $account, listing = $listing" +
             "requestedSeats= $requestedSeats, usedBalance=$usedBalance, usedBalance =$usedBalance," +
             " grandTotal = $grandTotal, dateReserved = $dateReserved }"
 }

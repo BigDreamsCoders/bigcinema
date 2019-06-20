@@ -41,7 +41,7 @@ data class Listing(
         var entryFee : BigDecimal
 )
 {
-    override fun toString(): String = "Listing{id=$lisId, movie = $movie, active = $actStatus," +
+    override fun toString(): String = "Listing{cor=$lisCor,id=$lisId, movie = $movie, active = $actStatus," +
             "format = $formatType, start = $startTime, seats=$avaiSeats, reserved = $reserSeats," +
             "fee=$entryFee}"
 }

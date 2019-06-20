@@ -20,5 +20,5 @@ data class State (
 
 )
 {
-    override fun toString(): String = "State{id = $staId , name = $staName}"
+    override fun toString(): String = "State{cor=$staCor, id = $staId , name = $staName}"
 }

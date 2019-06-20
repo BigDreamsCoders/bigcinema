@@ -35,7 +35,7 @@ data class Record(
         var lastToModify : String =""
 )
 {
-    override fun toString(): String = "Province{id = $recId , description = $description, " +
+    override fun toString(): String = "Province{cor=$recCor, id = $recId , description = $description, " +
             "status = $actStatus, creationDate=$creationDate, creatorAccount = $creatorAccount," +
             "lastModification=$lastModification, lastToModify=$lastToModify}"
 }
