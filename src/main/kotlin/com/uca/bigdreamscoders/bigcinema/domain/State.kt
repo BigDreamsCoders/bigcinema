@@ -1,14 +1,12 @@
 package com.uca.bigdreamscoders.bigcinema.domain
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity(name = "state")
 data class State (
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_sta_cor_seq")
+        @SequenceGenerator(sequenceName = "state_sta_cor_seq",  name = "state_sta_cor_seq")
         @Column (name = "sta_cor")
         var staCor : Int,
 
@@ -16,7 +14,11 @@ data class State (
         var staId : String = "",
 
         @Column(name="name")
-        var staName : String =""
+        var staName : String ="",
+
+        @OneToMany(fetch = FetchType.EAGER,
+                mappedBy = "state")
+        var entradas : Set<Province>?=null
 
 )
 {

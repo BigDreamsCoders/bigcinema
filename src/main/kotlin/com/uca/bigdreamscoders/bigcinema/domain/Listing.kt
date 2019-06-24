@@ -9,9 +9,10 @@ import javax.persistence.*
 @Entity(name="listing")
 data class Listing(
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listing_lis_cor_seq")
+        @SequenceGenerator(sequenceName = "listing_lis_cor_seq",  name = "listing_lis_cor_seq")
         @Column(name = "lis_cor")
-        var lisCor : Int,
+        var lisCor : Int?=null,
 
         @Column(name="lis_id")
         var lisId : String = "",
@@ -19,26 +20,29 @@ data class Listing(
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "mov_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         var movie : Movie,
 
         @Column(name="active_status")
-        var actStatus : Boolean,
+        var actStatus : Boolean?=false,
 
         @Column(name="format_type")
-        var formatType : String,
+        var formatType : String="",
 
         @Column(name="start_time")
-        var startTime: String,
+        var startTime: String= "",
 
         @Column(name = "available_seats")
-        var avaiSeats : Int,
+        var avaiSeats : Int? =null,
 
         @Column(name = "reserved_seats")
-        var reserSeats : Int,
+        var reserSeats : Int?= null,
 
         @Column(name = "entry_fee")
-        var entryFee : BigDecimal
+        var entryFee : BigDecimal?=null,
+
+        @OneToMany(fetch = FetchType.EAGER,
+                mappedBy = "listing")
+        var entradas : Set<Reservation>?=null
 )
 {
     override fun toString(): String = "Listing{cor=$lisCor,id=$lisId, movie = $movie, active = $actStatus," +

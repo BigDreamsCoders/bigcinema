@@ -8,9 +8,10 @@ import javax.persistence.*
 @Entity(name="province")
 data class Province (
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "province_pro_cor_seq")
+        @SequenceGenerator(sequenceName = "province_pro_cor_seq",  name = "province_pro_cor_seq")
         @Column(name = "pro_cor")
-        var proCor : Int,
+        var proCor : Int?=null,
 
         @Column(name="pro_id")
         var proId : String = "",
@@ -18,7 +19,6 @@ data class Province (
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "sta_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         var state :  State,
 
         @Column(name = "name")

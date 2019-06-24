@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface AccountRepository : CrudRepository<Account, Int>{
-    fun findByProId(proId: Int?, pageable: Pageable): Page<Account>
-    fun findByIdAndProId(accId: Int?, proId: Int?): Optional<Account>
+    fun findByProvinceProCor(proId: Int?, pageable: Pageable): Page<Account>
+    fun findByAccCorAndProvinceProCor(accId: Int?, proId: Int?): Optional<Account>
 }

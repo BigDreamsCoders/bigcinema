@@ -6,9 +6,10 @@ import javax.persistence.*
 @Entity(name="movie")
 data class Movie (
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_mov_cor_seq")
+        @SequenceGenerator(sequenceName = "movie_mov_cor_seq",  name = "movie_mov_cor_seq")
         @Column(name = "mov_cor")
-        var movCor : Int,
+        var movCor : Int?=null,
 
         @Column(name="mov_id")
         var movId : String = "",
@@ -17,7 +18,7 @@ data class Movie (
         var name : String = "",
 
         @Column(name = "active_status")
-        var actStatus : Boolean,
+        var actStatus : Boolean?=false,
 
         @Column(name = "description")
         var description : String = "",

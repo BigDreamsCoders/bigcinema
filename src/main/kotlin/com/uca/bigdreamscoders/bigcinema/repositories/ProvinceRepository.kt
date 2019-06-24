@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable
 import java.util.*
 
 interface ProvinceRepository : CrudRepository<Province, Int>{
-    fun findByStaId(staId: Int?, pageable: Pageable): Page<Province>
-    fun findByIdAndStaId(proId: Int?, staId: Int?): Optional<Province>
+    fun findByStateStaCor(staId: Int?, pageable: Pageable): Page<Province>
+    fun findByProCorAndStateStaCor(proId: Int?, staId: Int?): Optional<Province>
 }

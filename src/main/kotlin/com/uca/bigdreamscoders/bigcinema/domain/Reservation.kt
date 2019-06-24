@@ -10,9 +10,10 @@ import javax.persistence.*
 @Entity(name = "reservation")
 data class Reservation(
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_res_cor_seq")
+        @SequenceGenerator(sequenceName = "reservation_res_cor_seq",  name = "reservation_res_cor_seq")
         @Column(name = "res_cor")
-        var resCor : Int,
+        var resCor : Int?=null,
 
         @Column(name = "res_id")
         var resId : String ="",
@@ -20,26 +21,24 @@ data class Reservation(
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "acc_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         var account : Account,
 
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "lis_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         var listing : Listing,
 
         @Column(name = "requested_seats")
-        var requestedSeats : Int,
+        var requestedSeats : Int?=null,
 
         @Column(name = "balance_used")
-        var usedBalance : BigDecimal,
+        var usedBalance : BigDecimal?=null,
 
         @Column(name = "grand_total")
-        var grandTotal : BigDecimal,
+        var grandTotal : BigDecimal?= null,
 
         @Column(name = "date_reserved")
-        var dateReserved : Date
+        var dateReserved : String = ""
 )
 {
     override fun toString(): String = "Reservation{cor=$resCor, id = $resId , account = $account, listing = $listing" +

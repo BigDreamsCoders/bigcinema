@@ -10,9 +10,10 @@ import javax.persistence.*
 @Entity(name = "account")
 data class Account (
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_acc_cor_seq")
+        @SequenceGenerator(sequenceName = "account_acc_cor_seq",  name = "account_acc_cor_seq")
         @Column(name = "acc_cor")
-        var accCor : Int,
+        var accCor : Int?=null,
 
         @Column(name="acc_id")
         var accId : String = "",
@@ -20,8 +21,7 @@ data class Account (
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "pro_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
-        var province: Province,
+        var province: Province?=null,
 
         @Column(name="name")
         var name : String ="",
@@ -48,17 +48,20 @@ data class Account (
         var inacReason : String = "",
 
         @Column(name="date_of_birth")
-        var dateBirth : Date,
+        var dateBirth : String ?=null,
 
         @Column(name="age")
-        var age : Int,
+        var age : Int ?=null,
 
         @Column(name="account_balance")
-        var accBalance : BigDecimal,
+        var accBalance : BigDecimal?=null,
 
         @Column(name="address")
-        var address : String = ""
+        var address : String = "",
 
+        @OneToMany(fetch = FetchType.EAGER,
+                mappedBy = "account")
+        var entradas : Set<Reservation>?=null
 )
 {
     override fun toString(): String = "Account{cor=$accCor, id = $accId , name = $name, lastname= $lastname" +
