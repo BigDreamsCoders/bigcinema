@@ -21,12 +21,12 @@ data class Reservation(
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "acc_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        var account : Account,
+        var account : Account?=null,
 
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name= "lis_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        var listing : Listing,
+        var listing : Listing?=null,
 
         @Column(name = "requested_seats")
         var requestedSeats : Int?=null,

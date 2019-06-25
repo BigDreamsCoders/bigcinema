@@ -9,4 +9,6 @@ import java.util.*
 interface AccountRepository : CrudRepository<Account, Int>{
     fun findByProvinceProCor(proId: Int?, pageable: Pageable): Page<Account>
     fun findByAccCorAndProvinceProCor(accId: Int?, proId: Int?): Optional<Account>
+    fun findByUsernameAndPassword(username: String, password: String): Optional<Account>
+    fun findByUsername(username: String) : Optional<Account>
 }

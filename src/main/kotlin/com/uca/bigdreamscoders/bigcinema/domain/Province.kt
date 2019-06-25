@@ -16,10 +16,10 @@ data class Province (
         @Column(name="pro_id")
         var proId : String = "",
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "sta_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "sta_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
-        var state :  State,
+        var state :  State?=null,
 
         @Column(name = "name")
         var proName : String = ""
