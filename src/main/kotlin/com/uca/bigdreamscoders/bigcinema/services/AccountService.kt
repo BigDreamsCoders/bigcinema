@@ -12,10 +12,14 @@ class AccountService  {
     @Autowired
     lateinit var accountRepository:AccountRepository
 
+    fun findAll() = accountRepository.findAll()
+
+    fun findByOne(accId:String) = accountRepository.findByAccId(accId)
 
     fun login(user: String, pass : String)= accountRepository.findByUsernameAndPassword(user, pass)
 
     fun checkUser(user:String) = accountRepository.findByUsername(user)
 
     fun save (account: Account) = accountRepository.save(account)
+
 }

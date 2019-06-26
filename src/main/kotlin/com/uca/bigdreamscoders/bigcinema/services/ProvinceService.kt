@@ -8,4 +8,7 @@ import org.springframework.stereotype.Service
 class ProvinceService{
     @Autowired
     lateinit var provinceRepository: ProvinceRepository
+
+    fun findAll() = provinceRepository.findAll()
+    fun findByProId(proId:String) = provinceRepository.findByProId(proId)
 }

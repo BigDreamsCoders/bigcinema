@@ -11,4 +11,5 @@ interface AccountRepository : CrudRepository<Account, Int>{
     fun findByAccCorAndProvinceProCor(accId: Int?, proId: Int?): Optional<Account>
     fun findByUsernameAndPassword(username: String, password: String): Optional<Account>
     fun findByUsername(username: String) : Optional<Account>
+    fun findByAccId(accId: String) : Optional<Account>
 }

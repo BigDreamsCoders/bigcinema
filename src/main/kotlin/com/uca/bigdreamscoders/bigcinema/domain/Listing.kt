@@ -8,17 +8,18 @@ import javax.persistence.*
 
 @Entity(name="listing")
 data class Listing(
-        @Id
+
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listing_lis_cor_seq")
         @SequenceGenerator(sequenceName = "listing_lis_cor_seq",  name = "listing_lis_cor_seq")
         @Column(name = "lis_cor")
         var lisCor : Int?=null,
 
+        @Id
         @Column(name="lis_id")
         var lisId : String = "",
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "mov_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "mov_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
         var movie : Movie,
 
@@ -40,7 +41,7 @@ data class Listing(
         @Column(name = "entry_fee")
         var entryFee : BigDecimal?=null,
 
-        @OneToMany(fetch = FetchType.EAGER,
+        @OneToMany(fetch = FetchType.LAZY,
                 mappedBy = "listing")
         var entradas : Set<Reservation>?=null
 )

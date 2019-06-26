@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service
 class RecordService{
     @Autowired
     lateinit var recordRepository: RecordRepository
+
+    fun findAll() = recordRepository.findAll()
 }

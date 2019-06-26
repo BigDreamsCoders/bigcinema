@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <title>Rustico</title>
+    <title>NCapas</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -10,14 +10,14 @@
 
 </head>
 <body>
-<div class="container my-6">
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-5">Register</h2>
-            <form th:object="${account}" th:action="@{/signin}" method="post">
+<div class="container my-4">
+    <div class="row justify-content-md-center px-4">
+        <div class="col-sm-12 col-md-10 col-lg-7 p-4 mb-4 card">
+            <h2 class="text-center mb-5">Register</h2>
+            <form th:object="${registerForm}" th:action="@{/signin}" method="post">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="givename" class="col-form-label">Given name</label>
+                        <label for="givename" class="col-form-label">Given names</label>
                         <div class="input-group input-group-seamless">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="lastname" class="col-form-label">Lastname</label>
+                        <label for="lastname" class="col-form-label">Last Names</label>
                         <div class="input-group input-group-seamless">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <input id="lastname" type="text" class="form-control"
-                                   th:field="*{lastname}"/>
+                                   th:field="*{lastName}"/>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                               class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"
+                        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
                               class="text-danger"></span>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6 ml-auto mr-auto">
                         <label for="dateBirth" class="col-form-label">Date of Birth</label>
                         <div class="input-group input-group-seamless">
                             <div class="input-group-prepend">
@@ -108,33 +108,85 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="state" class="col-form-label">State</label>
+                        <select id="state" class="custom-select" onchange="giveSelection(this.value)">
+                            <option th:each="sta: ${states}" th:value="${sta.staId}" th:text="${sta.staName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label for="province" class="col-form-label">Province</label>
+                        <select id="province" class="custom-select"
+                                th:field="*{proId}">
+                            <option th:each="pro : ${provinces}" th:value="${pro.proId}"
+                                    th:data-option="${pro.state.staId}" th:text="${pro.proName}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <span th:if="${#fields.hasErrors('proId')}" th:errors="*{proId}"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea th:field="*{address}" id="address" class="form-control mb-4" rows="5"
+                                      placeholder="Enter your address..." name="message"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-md-12">
                         <span th:if="${errorRegister}" th:text="${errorRegister}"
                               class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 mt-5">
-                        <input type="submit" class="btn btn-primary" value="Sign in">
+                    <div class="col-md-12 d-flex">
+                        <input class="btn btn-primary btn-pill d-flex ml-auto mr-auto" type="submit" value="Register" />
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="text/javascript"  th:src="@{/assets/js/shards.js}"></script>
-    <script>
-        window.onload = function() {
-            $('#dateBirth').datepicker({
-                startDate: '-3d',
-                calendarWeeks: true,
-                autoclose: true,
-                todayHighlight: true
-            });
-        };
-    </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript"  th:src="@{/assets/js/shards.js}"></script>
+<script>
+
+    var sel1 = document.querySelector('#state');
+    var sel2 = document.querySelector('#province');
+    var options2 = sel2.querySelectorAll('option');
+
+    function giveSelection(selValue) {
+        sel2.innerHTML = '';
+        for(var i = 0; i < options2.length; i++) {
+            if(options2[i].dataset.option === selValue) {
+                sel2.appendChild(options2[i]);
+            }
+        }
+    }
+
+    giveSelection(sel1.value);
+    window.onload = function() {
+        $('#dateBirth').datepicker({
+            maxDate: new Date(),
+            calendarWeeks: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    };
+</script>
 </div>
 </body>
 </html>

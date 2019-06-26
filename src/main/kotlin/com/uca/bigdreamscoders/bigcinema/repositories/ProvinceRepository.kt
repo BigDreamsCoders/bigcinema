@@ -9,4 +9,5 @@ import java.util.*
 interface ProvinceRepository : CrudRepository<Province, Int>{
     fun findByStateStaCor(staId: Int?, pageable: Pageable): Page<Province>
     fun findByProCorAndStateStaCor(proId: Int?, staId: Int?): Optional<Province>
+    fun findByProId(proId : String) : Optional<Province>
 }

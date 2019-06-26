@@ -1,22 +1,25 @@
 package com.uca.bigdreamscoders.bigcinema.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.uca.bigdreamscoders.bigcinema.form.AdminRegisterForm
+import com.uca.bigdreamscoders.bigcinema.form.RegisterForm
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity(name = "account")
 data class Account (
-        @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_acc_cor_seq")
         @SequenceGenerator(sequenceName = "account_acc_cor_seq",  name = "account_acc_cor_seq")
         @Column(name = "acc_cor")
         var accCor : Int?=null,
 
+        @Id
         @Column(name="acc_id")
         var accId : String = "",
 
@@ -29,7 +32,8 @@ data class Account (
         var name : String ="",
 
         @Column(name="lastname")
-        var lastname : String ="",
+        @field:NotEmpty(message = "*Please fill your lastname")
+        var lastName : String ="",
 
         @Column(name="username")
         @field:NotEmpty(message = "*Please fill the username")
@@ -54,6 +58,7 @@ data class Account (
         var inacReason : String = "",
 
         @Column(name="date_of_birth")
+        @field:NotEmpty(message = "*Please add your birthday")
         var dateBirth : String = "",
 
         @Column(name="age")
@@ -67,11 +72,29 @@ data class Account (
 
         @OneToMany(fetch = FetchType.LAZY,
                 mappedBy = "account")
-        var entradas : Set<Reservation>?=null
+        var entries : Set<Reservation>?=null
 )
 {
-    override fun toString(): String = "Account{cor=$accCor, id = $accId , name = $name, lastname= $lastname" +
-            "province = $province, role = $accRole, accActive = $accActive, loged = $actSession" +
-            "reason = $inacReason, dateBirth = $dateBirth, age = $age, balance = $accBalance," +
-            "address = $address }"
+        override fun toString(): String = "Account{cor=$accCor, id = $accId , name = $name, lastname= $lastName" +
+        "province = $province, role = $accRole, accActive = $accActive, loged = $actSession" +
+        "reason = $inacReason, dateBirth = $dateBirth, age = $age, balance = $accBalance," +
+        "address = $address }"
+
+        fun newAccount(registerForm: RegisterForm){
+                password = registerForm.password
+                dateBirth = registerForm.dateBirth
+                lastName = registerForm.lastName
+                name = registerForm.name
+                username = registerForm.username
+        }
+
+        fun newAdminAccount(adminRegisterForm: AdminRegisterForm){
+                password = adminRegisterForm.password
+                dateBirth = adminRegisterForm.dateBirth
+                lastName = adminRegisterForm.lastName
+                name = adminRegisterForm.name
+                username = adminRegisterForm.username
+        }
+
+        fun delegateAccActive() = if(accActive) "Active" else "Inactive"
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service
 class MovieService{
     @Autowired
     lateinit var movieRepository: MovieRepository
+
+    fun findAll() = movieRepository.findAll()
 }

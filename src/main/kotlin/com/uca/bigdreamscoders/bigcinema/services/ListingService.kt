@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service
 class ListingService{
     @Autowired
     lateinit var listingRepository: ListingRepository
+
+    fun findAll() = listingRepository.findAll()
 }

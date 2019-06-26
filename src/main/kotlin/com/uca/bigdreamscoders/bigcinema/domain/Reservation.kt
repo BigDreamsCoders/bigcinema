@@ -9,22 +9,23 @@ import javax.persistence.*
 
 @Entity(name = "reservation")
 data class Reservation(
-        @Id
+
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_res_cor_seq")
         @SequenceGenerator(sequenceName = "reservation_res_cor_seq",  name = "reservation_res_cor_seq")
         @Column(name = "res_cor")
         var resCor : Int?=null,
 
+        @Id
         @Column(name = "res_id")
         var resId : String ="",
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "acc_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "acc_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
         var account : Account?=null,
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "lis_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "lis_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
         var listing : Listing?=null,
 

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service
 class StateService{
     @Autowired
     lateinit var stateRepository: StateRepository
+
+    fun findAll() = stateRepository.findAll()
 }
