@@ -12,7 +12,7 @@ data class Reservation(
 
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_res_cor_seq")
         @SequenceGenerator(sequenceName = "reservation_res_cor_seq",  name = "reservation_res_cor_seq")
-        @Column(name = "res_cor")
+        @Column(name = "res_cor",  insertable=false)
         var resCor : Int?=null,
 
         @Id

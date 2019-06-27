@@ -1,19 +1,16 @@
 package com.uca.bigdreamscoders.bigcinema.controller
 import com.uca.bigdreamscoders.bigcinema.domain.Listing
-import com.uca.bigdreamscoders.bigcinema.domain.Movie
 import org.springframework.data.domain.Pageable
 import com.uca.bigdreamscoders.bigcinema.form.ListingForm
 import com.uca.bigdreamscoders.bigcinema.form.ReasonForm
+import com.uca.bigdreamscoders.bigcinema.form.ReservationForm
 import com.uca.bigdreamscoders.bigcinema.services.ListingService
 import com.uca.bigdreamscoders.bigcinema.services.MovieService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @Controller
@@ -66,10 +63,25 @@ class ListingController{
                 model.addAttribute("error", "Error creating the new account")
             }
             model.addAttribute("listings", listingService.findAll().toList())
-            model.addAttribute("listingForm", ListingForm())
+            model.addAttribute("reasonForm", ReasonForm())
             return "dashboard-listing"
         }
     }
-
+    @RequestMapping("/movie/{movId}/listing")
+    fun getListingMovie(@PathVariable("movId") movId: String, model: Model,
+                        pageable:Pageable):String{
+        movieService.findByOne(movId).ifPresent{
+            model.addAttribute("movie", it)
+            val lists = listingService.findByActStatusAndMovieMovId(true, it.movId,
+                    pageable).toList()
+            print(lists)
+            model.addAttribute("listing", lists)
+        }
+        model.addAttribute("reservationForm", ReservationForm() )
+        if(!model.containsAttribute("movie")){
+            return "redirect:/dashboard-client"
+        }
+        return "view-listing"
+    }
 
 }

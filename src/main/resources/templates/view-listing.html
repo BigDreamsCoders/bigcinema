@@ -17,37 +17,89 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <body>
-<main class="main-content col-lg-12 col-md-2 col-sm-12 p-0">
+<form th:object="${reservationForm}" th:action="@{/reservation/new}" method="post">
+<main class="main-content col-lg-12 col-md-2 col-sm-12 p-0 ">
     <div th:replace="navbars/top-bar-admin::navbar"></div>
-    <div class="main-content-container container-fluid px-4">
-        <div class="page-header row no-gutters py-4">
-            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                <span class="text-uppercase page-subtitle">All avialable</span>
-                <h3 class="page-title" th:text="${movie.name}"></h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card card-small mb-4 pt-3 h-100" style="width: 20rem;">
+    <div class="main-content-container container-fluid px-4 mt-2">
+        <div class="row justify-content">
+            <div class="col-md-4 col-lg-4 ml-auto">
+                <div class="card card-small mb-4" style="width: 20rem;">
                     <img class="card-img-top" th:src="${movie.imageUrl}" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <a class="text-fiord-blue" th:text="${movie.name}"></a>
-                        </h5>
+                        <h4 class="card-title" th:text="${movie.name}"></h4>
                         <p class="card-text" th:text="${movie.description}"></p>
                     </div>
-                    <div class="card-footer text-muted border-top py-3">
-                        <a th:href="@{/movie/{movId}/listing(movId=${movie.movId})}"
-                           class="btn btn-primary">Buy tickets &rarr;</a>
-                    </div>
                 </div>
+                <p><a th:href="@{/dashboard-client}" class="btn btn-primary">Back
+                    <i class="fas fa-arrow-left ml-4"></i></a></p>
+            </div>
+            <div class="col-md-6 col-log-6 mr-auto" th:switch="${#lists.isEmpty(listing)}">
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">Billboard available</h6>
+                </div>
+                <ul th:case="*" class="list-group list-group-flush" >
+                    <li th:each="lis : ${listing}" class="custom-controls-stacked list-group-item p-2" >
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="col-form-label">Mark movie</label>
+                                            <button type="button" th:value="${lis.lisId}"  class="btn btn-primary button-active verify">
+                                                <i class="far fa-circle"></i><!--<i class="fas fa-check"></i>-->
+                                            </button>
+                                        </div>
+                                        <div class="col-md-2 col-lg-3">
+                                            <strong class="text-muted d-block mb-2">Available seats</strong>
+                                            <span th:text="${lis.avaiSeats}"></span>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <strong class="text-muted d-block mb-2">Start time</strong>
+                                            <span th:text="${lis.startTime}"></span>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <strong class="text-muted d-block mb-2">Entry fee</strong>
+                                            <span th:text="${'$'+lis.entryFee}"></span>
+                                        </div>
+                                        <div class="col-md-2 col-lg-3">
+                                            <strong class="text-muted d-block mb-2">Format type</strong>
+                                            <span th:text="${lis.formatType}"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
 
+                    </li>
+
+                    <li class="list-group-item p-2">
+                        <div class="row">
+                            <div class="col-md-2 col-lg-2 ml-auto" >
+                                <div class="input-group">
+                                    <input id="target" class="form-control" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <input th:field="*{creditUse}" id="credit" type="number" class="form-control"
+                                       placeholder="Credit to use"
+                                       aria-label="Credit to use" aria-describedby="basic-addon2">
+                            </div>
+                            <div class="col-md-4 col-lg-4 mr-auto ">
+                                <div class="input-group">
+                                    <input th:field="*{resSeats}" id="reserve" type="number" class="form-control"
+                                           placeholder="Number of seats"
+                                           aria-label="Number of seats" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">Receipt</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </main>
-
-
+</form>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -55,5 +107,24 @@
 <script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
 <script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
+<script type="text/javascript">
+
+    var target = document.querySelector("#target");
+    var all = document.querySelectorAll(".verify");
+
+    $('.verify').click(function(){
+        var object = $(this);
+        all.forEach(function (element){
+            if(element!=object){
+           element.className = "btn btn-primary button-active verify";
+           element.children[0].className = "far fa-circle";
+            }
+        });
+        object.removeClass();
+        object.addClass("btn btn-success button-active verify")
+        object.children()[0].className = "fas fa-check";
+        target.value = object.val();
+    });
+</script>
 </body>
 </html>

@@ -25,11 +25,8 @@ data class Movie (
         var description : String = "",
 
         @Column(name = "image_url")
-        var imageUrl : String = "",
+        var imageUrl : String = ""
 
-        @OneToMany(fetch = FetchType.LAZY,
-                mappedBy = "movie")
-        var funtions : Set<Listing>?=null
 ) {
         override fun toString(): String = "Movie{cor=$movCor" +
                 "id = $movId , name = $name, actStatus = $actStatus," +

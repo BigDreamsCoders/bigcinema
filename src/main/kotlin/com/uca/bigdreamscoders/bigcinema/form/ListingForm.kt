@@ -1,6 +1,7 @@
 package com.uca.bigdreamscoders.bigcinema.form
 
 import java.math.BigDecimal
+import javax.validation.constraints.NotNull
 
 data class ListingForm(
         var movId : String = "",

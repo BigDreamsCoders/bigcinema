@@ -8,7 +8,7 @@ data class Record(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "record_rec_cor_seq")
         @SequenceGenerator(sequenceName = "record_rec_cor_seq",  name = "record_rec_cor_seq")
-        @Column(name = "rec_cor")
+        @Column(name = "rec_cor",  insertable=false)
         var recCor : Int?=null,
 
         @Column(name="rec_id")

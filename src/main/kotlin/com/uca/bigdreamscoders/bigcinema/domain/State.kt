@@ -7,7 +7,7 @@ data class State (
 
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_sta_cor_seq")
         @SequenceGenerator(sequenceName = "state_sta_cor_seq",  name = "state_sta_cor_seq")
-        @Column (name = "sta_cor")
+        @Column (name = "sta_cor",  insertable=false)
         var staCor : Int?=null,
 
         @Id

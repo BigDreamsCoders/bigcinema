@@ -52,14 +52,4 @@ class MovieController{
         }
     }
 
-    @RequestMapping("/movie/{movId}/listing")
-    fun getListingMovie(@PathVariable("movId") movId: String, model: Model):String{
-        movieService.findByOne(movId).ifPresent{
-            model.addAttribute("movie", it)
-        }
-        if(!model.containsAttribute("movie")){
-            return "redirect:/dashboard-client"
-        }
-        return "view-listing"
-    }
 }
