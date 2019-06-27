@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
-<aside th:replace="navbars/admin::navbar('',' active','')"></aside>
+<aside th:replace="navbars/admin::navbar('','',' active')"></aside>
 <body>
 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
     <div th:replace="navbars/top-bar-admin::navbar"></div>
@@ -24,14 +24,14 @@
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">Overview</span>
-                <h3 class="page-title">Movie tables</h3>
+                <h3 class="page-title">Listing tables</h3>
                 <br>
-                <a th:href="@{/movie/prepare}" class="btn btn-primary button-active">Add new movie
+                <a th:href="@{/listing/prepare}" class="btn btn-primary button-active">Add new function
                     <i class="fa fa-plus-square mr-2 ml-2" ></i></a>
             </div>
         </div>
-        <div class="row"  th:switch="${#lists.isEmpty(movies)}">
-            <h2 th:case="true">No accounts yet!</h2>
+        <div class="row"  th:switch="${#lists.isEmpty(listings)}">
+            <h2 th:case="true">No functions yet!</h2>
             <div class="col" th:case="*">
                 <div class="card card-small mb-4">
                     <div class="card-header border-bottom">
@@ -42,27 +42,27 @@
                             <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0">#</th>
-                                <th scope="col" class="border-0">Name</th>
-                                <th scope="col" class="border-0">Description</th>
-                                <th scope="col" class="border-0">Image Url</th>
+                                <th scope="col" class="border-0">Entry fee</th>
+                                <th scope="col" class="border-0">Format</th>
+                                <th scope="col" class="border-0">Available seats</th>
+                                <th scope="col" class="border-0">Start time</th>
+                                <th scope="col" class="border-0">Reserved seats</th>
                                 <th scope="col" class="border-0">Current status</th>
                                 <th scope="col" class="border-0">Modify active</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="mov : ${movies}">
-                                <td th:text="${mov.movId}"></td>
-                                <td th:text="${mov.name}"></td>
-                                <td th:text="${mov.description}"></td>
-                                <td class="d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
-                                        <img class="card-img-top" th:src="${mov.imageUrl}" alt="Card image cap">
-                                    </div>
-                                </td>
-                                <td th:id="${mov.movId}" th:text="${mov.delegateMovActive()}"></td>
+                            <tr th:each="lis : ${listings}">
+                                <td th:text="${lis.lisId}"></td>
+                                <td th:text="${'$'+lis.entryFee}"></td>
+                                <td th:text="${lis.formatType}"></td>
+                                <td th:text="${lis.avaiSeats}"></td>
+                                <td th:text="${lis.startTime}"></td>
+                                <td th:text="${lis.reserSeats}"></td>
+                                <td th:id="${lis.lisId}" th:text="${lis.delegateLisActive()}"></td>
                                 <td>
-                                    <button th:value="${mov.movId}" data-toggle="modal"
-                                            data-target="#movModal" class="btn btn-success button-active">
+                                    <button th:value="${lis.lisId}" data-toggle="modal"
+                                            data-target="#lisModal" class="btn btn-success button-active">
                                         <i class="fa fa-edit mr-2 ml-2"></i>
                                     </button>
                                 </td>
@@ -77,13 +77,13 @@
 </main>
 
 
-<div class="modal fade" id="movModal" tabindex="-1" role="dialog"
-     aria-labelledby="movModalLabel" aria-hidden="true">
+<div class="modal fade" id="lisModal" tabindex="-1" role="dialog"
+     aria-labelledby="lisModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form th:object="${reasonForm}" th:action="@{/movie/active}" method="post">
+        <form th:object="${reasonForm}" th:action="@{/listing/active}" method="post">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="movModalLabel">Are you sure?</h5>
+                    <h5 class="modal-title" id="lisModalLabel">Are you sure?</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

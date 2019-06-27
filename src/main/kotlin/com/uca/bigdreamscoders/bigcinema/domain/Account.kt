@@ -16,7 +16,7 @@ import javax.validation.constraints.Size
 data class Account (
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_acc_cor_seq")
         @SequenceGenerator(sequenceName = "account_acc_cor_seq",  name = "account_acc_cor_seq")
-        @Column(name = "acc_cor")
+        @Column(name = "acc_cor",  insertable=false)
         var accCor : Int?=null,
 
         @Id
@@ -46,7 +46,7 @@ data class Account (
         var password : String ="",
 
         @Column(name="account_role")
-        var accRole : Int ?= 0,
+        var accRole : Int ?= 2,
 
         @Column(name="active_account")
         var accActive : Boolean=false,
@@ -75,9 +75,9 @@ data class Account (
         var entries : Set<Reservation>?=null
 )
 {
-        override fun toString(): String = "Account{cor=$accCor, id = $accId , name = $name, lastname= $lastName" +
-        "province = $province, role = $accRole, accActive = $accActive, loged = $actSession" +
-        "reason = $inacReason, dateBirth = $dateBirth, age = $age, balance = $accBalance," +
+        override fun toString(): String = "Account{cor=$accCor, accId = $accId , name = $name, lastName= $lastName ," +
+        "$province, accRole = $accRole, accActive = $accActive, actSession = $actSession ," +
+        "inacReason = $inacReason, dateBirth = $dateBirth, age = $age, accBalance = $accBalance," +
         "address = $address }"
 
         fun newAccount(registerForm: RegisterForm){
@@ -97,4 +97,10 @@ data class Account (
         }
 
         fun delegateAccActive() = if(accActive) "Active" else "Inactive"
+
+        fun delegateRole() = when(accRole){
+                1 -> "Admin"
+                2 -> "Client"
+                else -> "Client"
+        }
 }

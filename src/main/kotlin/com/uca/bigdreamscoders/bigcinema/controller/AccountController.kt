@@ -18,8 +18,7 @@ import com.uca.bigdreamscoders.bigcinema.form.RegisterForm
 import com.uca.bigdreamscoders.bigcinema.services.ProvinceService
 import com.uca.bigdreamscoders.bigcinema.services.StateService
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
+
 
 
 @Controller
@@ -32,33 +31,42 @@ class AccountController{
     lateinit var provinceService: ProvinceService
 
     @GetMapping("/")
-    fun index(model: Model): String{
-        model.addAttribute("loginForm", LoginForm())
-        return "index"
+    fun index(session : HttpSession, model: Model): String{
+        val accountLoged: String ?= session.getAttribute("USER_LOGED") as String?
+        if (accountLoged == null) {
+            model.addAttribute("loginForm", LoginForm())
+            return "index"
+        }
+        return "redirect:/dashboard-account"
     }
 
     @PostMapping("/login")
     fun login(@Valid loginForm: LoginForm, result:BindingResult,
-              model:Model):String{
+              request : HttpServletRequest, model:Model):String{
+        val accountLoged: String? = request.session.getAttribute("USER_LOGED") as String?
+        if (accountLoged == null) {
+            request.session.setAttribute("USER_LOGED", accountLoged)
+        }
         model.addAttribute("loginForm", loginForm)
         if(result.hasErrors()){
             loginForm.password = ""
             return "index"
         }
         else{
+            var x = 0
             accountService.login(loginForm.username, loginForm.password).ifPresent {
-                print(it.toString())
-                if(!it.accActive){
-                    it.accActive = true
+                if(!it.actSession){
+                    request.session.setAttribute("USER_LOGED", it.toString())
+                    it.actSession = true
                     accountService.save(it)
-                    model.addAttribute("login", "Welcome")
+                    if(it.accRole==1) x = 1
+                    else x= 2
                 }
-                else {
-                    model.addAttribute("errorLogin", "Can't log in. Session already active")
-                }
+                else model.addAttribute("errorLogin", "Can't log in. Session already active")
             }
-            if(model.containsAttribute("login")){
-                return "redirect:/dashboard"
+            if(x !=0){
+                if(x==1) return "redirect:/dashboard-account"
+                else return "redirect:/dashboard-client"
             } else if(!model.containsAttribute("errorLogin")){
                 model.addAttribute("errorLogin", "Login failed check your credencials")
             }
@@ -105,8 +113,7 @@ class AccountController{
 
     @PostMapping("/acccount/active")
     fun active(reasonForm:ReasonForm,reason: String, model: Model): String {
-        print(reasonForm)
-        accountService.findByOne(reasonForm.accId).ifPresent {
+        accountService.findByOne(reasonForm.Id).ifPresent {
             it.accActive = !it.accActive
             it.inacReason = reason
             accountService.save(it)
@@ -117,18 +124,18 @@ class AccountController{
         }
         model.addAttribute("accounts", accountService.findAll().toList())
         model.addAttribute("reasonForm", reasonForm)
-        return "dashboard"
+        return "dashboard-account"
     }
-    @GetMapping("/account/create")
-    fun prepareCreate(model: Model): String{
+    @GetMapping("/account/prepare")
+    fun prepareCreateAccount(model: Model): String{
         model.addAttribute("adminRegisterForm", AdminRegisterForm())
         model.addAttribute("states", stateService.findAll())
         model.addAttribute("provinces", provinceService.findAll())
         return "create-account"
     }
 
-    @PostMapping("/account/create")
-    fun accountCreate(@Valid adminRegisterForm: AdminRegisterForm,result:BindingResult,
+    @PostMapping("/account/admin/create")
+    fun accountCreateAccount(@Valid adminRegisterForm: AdminRegisterForm,result:BindingResult,
                       model: Model):String{
         model.addAttribute("account", adminRegisterForm)
         model.addAttribute("states", stateService.findAll())
@@ -154,8 +161,10 @@ class AccountController{
             if(!model.containsAttribute("message")){
                 model.addAttribute("error", "Error creating the new account")
             }
-            model.addAttribute("loginForm", AdminRegisterForm())
-            return "create-account"
+            model.addAttribute("accounts", accountService.findAll().toList())
+            model.addAttribute("reasonForm", ReasonForm())
+            return "dashboard-account"
         }
     }
+
 }

@@ -1,7 +1,7 @@
 package com.uca.bigdreamscoders.bigcinema.form
 
 data class ReasonForm(
-        var accId :String="",
+        var Id :String="",
         var reason : String=""
 ){
 

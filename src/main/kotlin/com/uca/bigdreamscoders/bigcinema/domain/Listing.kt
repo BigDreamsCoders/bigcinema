@@ -1,6 +1,7 @@
 package com.uca.bigdreamscoders.bigcinema.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.uca.bigdreamscoders.bigcinema.form.ListingForm
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import java.math.BigDecimal
@@ -8,10 +9,9 @@ import javax.persistence.*
 
 @Entity(name="listing")
 data class Listing(
-
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listing_lis_cor_seq")
         @SequenceGenerator(sequenceName = "listing_lis_cor_seq",  name = "listing_lis_cor_seq")
-        @Column(name = "lis_cor")
+        @Column(name = "lis_cor",  insertable=false)
         var lisCor : Int?=null,
 
         @Id
@@ -21,10 +21,10 @@ data class Listing(
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name= "mov_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
-        var movie : Movie,
+        var movie : Movie?=null,
 
         @Column(name="active_status")
-        var actStatus : Boolean?=false,
+        var actStatus : Boolean=false,
 
         @Column(name="format_type")
         var formatType : String="",
@@ -46,7 +46,17 @@ data class Listing(
         var entradas : Set<Reservation>?=null
 )
 {
-    override fun toString(): String = "Listing{cor=$lisCor,id=$lisId, movie = $movie, active = $actStatus," +
+    override fun toString(): String = "Listing{lisCor=$lisCor,lisId=$lisId, movie = $movie, active = $actStatus," +
             "format = $formatType, start = $startTime, seats=$avaiSeats, reserved = $reserSeats," +
             "fee=$entryFee}"
+
+        fun delegateLisActive() = if (actStatus) "Active" else "Inactive"
+
+        fun newListing(listingForm: ListingForm){
+                avaiSeats = listingForm.avaiSeats
+                reserSeats = listingForm.reserSeats
+                entryFee = listingForm.entryFee
+                formatType = listingForm.formatType
+                startTime = listingForm.startTime
+        }
 }

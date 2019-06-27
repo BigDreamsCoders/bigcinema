@@ -38,8 +38,9 @@ data class AdminRegisterForm(
         @field:NotEmpty(message="*Please provide an address")
         var address : String="",
 
-        @field:Range(min = 1,max = 2,message = "*Select an appropiate account role")
-        var accRole : Int=0
+        @field:NotNull(message = "*Select a role")
+        @field:Range(min = 0,max = 2,message = "*Select an appropiate account role")
+        var accRole : Int?=null
 )
 {
 

@@ -26,19 +26,19 @@
     <div class="nav-wrapper">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a th:class="nav-link+${activeA}" href="index.html">
+                <a th:class="nav-link+${activeA}" th:href="@{/dashboard-account}">
                     <i class="material-icons">supervisor_account</i>
                     <span>Accounts</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a th:class="nav-link+${activeM}" href="components-blog-posts.html">
+                <a th:class="nav-link+${activeM}" th:href="@{/dashboard-movie}">
                     <i class="material-icons">local_movies</i>
                     <span>Movie</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a th:class="nav-link+${activeL}" href="add-new-post.html">
+                <a th:class="nav-link+${activeL}" th:href="@{/dashboard-listing}">
                     <i class="material-icons">note_add</i>
                     <span>Listing</span>
                 </a>

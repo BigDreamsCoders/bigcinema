@@ -9,4 +9,5 @@ import java.util.*
 interface ListingRepository : CrudRepository<Listing, Int>{
     fun findByMovieMovCor(movId: Int?, pageable: Pageable): Page<Listing>
     fun findByLisCorAndMovieMovCor(lisId: Int?, movId: Int?): Optional<Listing>
+    fun findByLisId(lisId :String) : Optional<Listing>
 }

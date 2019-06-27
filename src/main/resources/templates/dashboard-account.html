@@ -19,13 +19,14 @@
 <aside th:replace="navbars/admin::navbar(' active','','')"></aside>
 <body>
 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
+    <div th:replace="navbars/top-bar-admin::navbar"></div>
     <div class="main-content-container container-fluid px-4">
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">Overview</span>
                 <h3 class="page-title">Account tables</h3>
                 <br>
-                <a th:href="@{/account/create}" class="btn btn-primary button-active">Add new user
+                <a th:href="@{/account/prepare}" class="btn btn-primary button-active">Add new user
                     <i class="fa fa-plus-square mr-2 ml-2" ></i></a>
             </div>
         </div>
@@ -45,6 +46,7 @@
                                 <th scope="col" class="border-0">Last Names</th>
                                 <th scope="col" class="border-0">Username</th>
                                 <th scope="col" class="border-0">City</th>
+                                <th scope="col" class="border-0">Role</th>
                                 <th scope="col" class="border-0">Account active</th>
                                 <th scope="col" class="border-0">Modify active</th>
                             </tr>
@@ -57,6 +59,7 @@
                                 <td th:text="${acc.username}"></td>
                                 <td th:text="${acc.province.proName}"></td>
                                 <td th:id="${acc.accId}" th:text="${acc.delegateAccActive()}"></td>
+                                <td th:text="${acc.delegateRole()}"></td>
                                 <td>
                                 <button th:value="${acc.accId}" data-toggle="modal"
                                           data-target="#accModal" class="btn btn-success button-active">
@@ -94,7 +97,7 @@
                             <textarea th:field="*{reason}" name="reason" id="reason" class="form-control mb-4" rows="3"
                                       placeholder="Please provide a reason for this action..."></textarea>
                             </div>
-                            <input th:field="*{accId}" name="accId" type="hidden"  id="send" th:value="0">
+                            <input th:field="*{id}" name="accId" type="hidden"  id="send" th:value="0">
                         </div>
                     </div>
                 </div>

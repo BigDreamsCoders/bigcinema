@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <title>Rustico</title>
+    <title>NCapas</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -23,22 +23,22 @@
             <span class="text-uppercase page-subtitle">Overview</span>
             <h3 class="page-title">Account tables</h3>
             <br>
-            <a class="btn btn-primary button-active" th:href="@{/dashboard}">
-                <i class="fa fa-edit mr-2 ml-2" ></i></a>
+            <a class="btn btn-primary button-active" th:href="@{/dashboard-account}">
+                <i class="fa fa-arrow-left mr-2 ml-2" ></i>Go back</a>
         </div>
     </div>
-    <div class="row row justify-content-md-center px-4" >
+    <div class="row justify-content-center px-4" >
         <div class="col">
-            <div class="col-sm-12 col-md-10 col-lg-7 p-4 mb-4 card card">
+            <div class="col-sm-12 col-md-10 col-lg-7 p-4 mb-4 card ml-auto mr-auto">
                 <h2 class="text-center mb-5">Register</h2>
-                <form th:object="${adminRegisterForm}" th:action="@{/account/create}" method="post">
+                <form th:object="${adminRegisterForm}" th:action="@{/account/admin/create}" method="post">
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="givename" class="col-form-label">Given names</label>
                             <div class="input-group input-group-seamless">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
-                                        <i class="fas fa-signature"></i>
+                                        <i class="fa fa-edit"></i>
                                     </div>
                                 </div>
                                 <input id="givename" type="text" class="form-control"
@@ -50,7 +50,7 @@
                             <div class="input-group input-group-seamless">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
-                                        <i class="fas fa-signature"></i>
+                                        <i class="fa fa-edit"></i>
                                     </div>
                                 </div>
                                 <input id="lastname" type="text" class="form-control"
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-6 ml-auto mr-auto">
+                        <div class="form-group col-md-6">
                             <label for="dateBirth" class="col-form-label">Date of Birth</label>
                             <div class="input-group input-group-seamless">
                                 <div class="input-group-prepend">
@@ -117,10 +117,23 @@
                                        th:field="*{dateBirth}"/>
                             </div>
                         </div>
+                        <div class="form-group col-md-6 ">
+                            <label for="role" class="col-form-label">Province</label>
+                            <select id="role" class="custom-select"
+                                    th:field="*{accRole}">
+                                <option th:value="null">Select a movie</option>
+                                <option th:value="1">Admin</option>
+                                <option th:value="2">Client</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                         <span th:if="${#fields.hasErrors('dateBirth')}" th:errors="*{dateBirth}"
+                              class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                        <span th:if="${#fields.hasErrors('accRole')}" th:errors="*{accRole}"
                               class="text-danger"></span>
                         </div>
                     </div>
