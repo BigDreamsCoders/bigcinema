@@ -65,7 +65,7 @@ data class Account (
         var age : Int?= 0,
 
         @Column(name="account_balance")
-        var accBalance : BigDecimal?= BigDecimal.valueOf(20.00),
+        var accBalance : BigDecimal = BigDecimal.valueOf(20.00),
 
         @Column(name="address")
         var address : String = "",

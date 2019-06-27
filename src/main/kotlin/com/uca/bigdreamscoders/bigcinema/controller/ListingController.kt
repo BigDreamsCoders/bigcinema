@@ -4,13 +4,16 @@ import org.springframework.data.domain.Pageable
 import com.uca.bigdreamscoders.bigcinema.form.ListingForm
 import com.uca.bigdreamscoders.bigcinema.form.ReasonForm
 import com.uca.bigdreamscoders.bigcinema.form.ReservationForm
+import com.uca.bigdreamscoders.bigcinema.services.AccountService
 import com.uca.bigdreamscoders.bigcinema.services.ListingService
 import com.uca.bigdreamscoders.bigcinema.services.MovieService
+import com.uca.bigdreamscoders.bigcinema.utils.GeneralUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 @Controller
@@ -20,6 +23,9 @@ class ListingController{
 
     @Autowired
     lateinit var movieService: MovieService
+
+    @Autowired
+    lateinit var accountService : AccountService
 
     @GetMapping("/listing/prepare")
     fun prepareCreateListing(listingForm: ListingForm, model: Model, pageable: Pageable ): String{
@@ -68,8 +74,12 @@ class ListingController{
         }
     }
     @RequestMapping("/movie/{movId}/listing")
-    fun getListingMovie(@PathVariable("movId") movId: String, model: Model,
+    fun getListingMovie(request: HttpServletRequest, @PathVariable("movId") movId: String, model: Model,
                         pageable:Pageable):String{
+        val account = GeneralUtils.returnAccount(request, accountService)
+        if(account != null){
+            model.addAttribute("money", account.accBalance)
+        }
         movieService.findByOne(movId).ifPresent{
             model.addAttribute("movie", it)
             val lists = listingService.findByActStatusAndMovieMovId(true, it.movId,

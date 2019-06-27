@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NCapas</title>
+    <meta name="description"
+          content="A high-quality &amp; free Bootstrap admin dashboard template pack that comes with lots of templates and components.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0"
+          th:href="@{/assets/css/shards-dashboards.1.1.0.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+<body>
+<main class="main-content col-lg-12 col-md-2 col-sm-12 p-0 justify-content-md-center">
+    <div th:replace="navbars/top-bar-client::navbar(${money})"></div>
+    <div class="main-content-container container-fluid px-4">
+        <div class="col-md-4 col-log-4 mr-auto ml-auto mt-2" >
+            <div class="card-header border-bottom">
+                <h2 class="text-center mb-3">Your receipt</h2>
+            </div>
+            <ul  class="list-group list-group-flush">
+                <li th:if="${receipt != null}" class="custom-controls-stacked list-group-item p-2">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4 ml-auto text-center ">
+                                    <strong class="text-muted d-block">Movie</strong>
+                                    <span th:text="${receipt.listing.movie.name}"></span>
+                                </div>
+                                <div class="col-md-4 col-lg-4 mr-auto text-center ">
+                                    <strong class="text-muted d-block">Start time</strong>
+                                    <span th:text="${receipt.listing.startTime}"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row mb-1">
+                                <div class="col-md-4 col-lg-4 ml-auto text-center">
+                                    <strong class="text-muted d-block mb-2">Seats</strong>
+                                    <span th:text="${receipt.requestedSeats +' for ' + receipt.listing.formatType}"></span>
+                                </div>
+                                <div class="col-md-4 col-lg-4 mr-auto text-center">
+                                    <strong class="text-muted d-block mb-2">Subtotal</strong>
+                                    <span th:text="${'$'+receipt.listing.entryFee.multiply(receipt.requestedSeats)}"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4 ml-auto text-center">
+                                    <strong class="text-muted d-block mb-2 ">Credit to use</strong>
+                                    <span th:text="${'$'+receipt.usedBalance}"></span>
+                                </div>
+                                <div class="col-md-4 col-lg-4 mr-auto text-center">
+                                    <strong class="text-muted d-block mb-2">Remaining credit</strong>
+                                    <span th:text="${'$'+receipt.account.accBalance.subtract(receipt.usedBalance)}"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 mr-auto ml-auto text-center">
+                                    <h4 class="m-0">Grand total</h4>
+                                    <span th:text="${'$'+receipt.listing.entryFee.multiply(receipt.requestedSeats).subtract(
+                                    receipt.usedBalance)}"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <form th:object="${finalForm}" th:action="@{/reservation/create}" method="post">
+                                <div class="col-md-12 d-flex">
+                                    <input class="btn btn-primary btn-pill d-flex ml-auto mr-auto" type="submit" value="Buy" />
+                                </div>
+                                <input th:field="*{usedBalance}"  type="hidden"  th:value="${finalForm.usedBalance}">
+                                <input th:field="*{accountId}"  type="hidden"  th:value="${finalForm.accountId}">
+                                <input th:field="*{listingId}"  type="hidden"  th:value="${finalForm.listingId}">
+                                <input th:field="*{requestedSeats}"  type="hidden"  th:value="${finalForm.requestedSeats}">
+                                <input th:field="*{dateReserved}"  type="hidden"  th:value="${finalForm.dateReserved}">
+                                <input th:field="*{grandTotal}"  type="hidden"  th:value="${finalForm.grandTotal}">
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                <!--<li th:unless="${receipt==null}" class="custom-controls-stacked list-group-item p-2">
+                    <div class="col-md-2 col-lg-3">
+                        <h6 class="m-0">No receipt</h6>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
+<script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
+</body>
+</html>

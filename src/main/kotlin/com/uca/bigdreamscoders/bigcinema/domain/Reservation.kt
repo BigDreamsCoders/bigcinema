@@ -30,13 +30,13 @@ data class Reservation(
         var listing : Listing?=null,
 
         @Column(name = "requested_seats")
-        var requestedSeats : Int?=null,
+        var requestedSeats : Int=0,
 
         @Column(name = "balance_used")
-        var usedBalance : BigDecimal?=null,
+        var usedBalance : BigDecimal= BigDecimal.ZERO,
 
         @Column(name = "grand_total")
-        var grandTotal : BigDecimal?= null,
+        var grandTotal : BigDecimal = BigDecimal.ZERO,
 
         @Column(name = "date_reserved")
         var dateReserved : String = ""

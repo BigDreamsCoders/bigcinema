@@ -33,10 +33,10 @@ data class Listing(
         var startTime: String= "",
 
         @Column(name = "available_seats")
-        var avaiSeats : Int? =null,
+        var avaiSeats : Int =0,
 
         @Column(name = "reserved_seats")
-        var reserSeats : Int?= null,
+        var reserSeats : Int= 0,
 
         @Column(name = "entry_fee")
         var entryFee : BigDecimal?=null,

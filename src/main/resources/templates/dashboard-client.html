@@ -18,11 +18,11 @@
 </head>
 <body>
 <main class="main-content col-lg-12 col-md-2 col-sm-12 p-0">
-    <div th:replace="navbars/top-bar-admin::navbar"></div>
+    <div th:replace="navbars/top-bar-client::navbar(${money})"></div>
     <div class="main-content-container container-fluid px-4">
     <div class="page-header row no-gutters py-4">
         <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-            <span class="text-uppercase page-subtitle">All avialable</span>
+            <span class="text-uppercase page-subtitle">All available</span>
             <h3 class="page-title">Movies</h3>
         </div>
     </div>

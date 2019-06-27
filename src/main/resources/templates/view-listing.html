@@ -17,9 +17,9 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <body>
-<form th:object="${reservationForm}" th:action="@{/reservation/new}" method="post">
+
 <main class="main-content col-lg-12 col-md-2 col-sm-12 p-0 ">
-    <div th:replace="navbars/top-bar-admin::navbar"></div>
+    <div th:replace="navbars/top-bar-client::navbar(${money})"></div>
     <div class="main-content-container container-fluid px-4 mt-2">
         <div class="row justify-content">
             <div class="col-md-4 col-lg-4 ml-auto">
@@ -69,24 +69,32 @@
                             </ul>
 
                     </li>
-
-                    <li class="list-group-item p-2">
+                    <form th:object="${reservationForm}" th:action="@{/movie/{movId}/reservation/new(movId=${movie.movId})}" method="post">
+                        <input th:field="*{referenceId}"  type="hidden" name="lisId"  id="secret" th:value="0">
+                        <li class="list-group-item p-2">
                         <div class="row">
-                            <div class="col-md-2 col-lg-2 ml-auto" >
+                            <div class="col-md-2 col-lg-2 ml-auto mr-auto">
                                 <div class="input-group">
-                                    <input id="target" class="form-control" type="text" disabled>
+                                    <input  class="form-control" type="text" th:id="target" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 col-lg-4">
-                                <input th:field="*{creditUse}" id="credit" type="number" class="form-control"
-                                       placeholder="Credit to use"
-                                       aria-label="Credit to use" aria-describedby="basic-addon2">
+                                <label>Credit to use</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input th:field="*{creditUse}" id="credit" type="number" class="form-control"
+                                           placeholder="Credit to use"
+                                           aria-label="Credit to use" aria-describedby="basic-addon2">
+                                </div>
                             </div>
                             <div class="col-md-4 col-lg-4 mr-auto ">
+                                <label>Number of seats</label>
                                 <div class="input-group">
                                     <input th:field="*{resSeats}" id="reserve" type="number" class="form-control"
-                                           placeholder="Number of seats"
-                                           aria-label="Number of seats" aria-describedby="basic-addon2">
+                                           placeholder="Number of seats" aria-label="Number of seats"
+                                           aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Receipt</button>
                                     </div>
@@ -94,12 +102,14 @@
                             </div>
                         </div>
                     </li>
+                    </form>
                 </ul>
             </div>
         </div>
     </div>
+
 </main>
-</form>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -107,23 +117,28 @@
 <script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
 <script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
-<script type="text/javascript">
+<script  th:inline="javascript">
 
-    var target = document.querySelector("#target");
+    var target = $("#target");
+    var secret = $("#secret");
     var all = document.querySelectorAll(".verify");
 
     $('.verify').click(function(){
         var object = $(this);
+        var value = $(this).val();
         all.forEach(function (element){
             if(element!=object){
            element.className = "btn btn-primary button-active verify";
            element.children[0].className = "far fa-circle";
             }
         });
+        target.attr('value', value);
+        secret.attr('value', value);
+
         object.removeClass();
-        object.addClass("btn btn-success button-active verify")
+        object.addClass("btn btn-success button-active verify");
         object.children()[0].className = "fas fa-check";
-        target.value = object.val();
+
     });
 </script>
 </body>
