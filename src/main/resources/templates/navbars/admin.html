@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0" th:fragment="navbar(activeA, activeM, activeL, activeR)">
+<aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0" th:fragment="navbar(activeA, activeM, activeL, activeT, activeR)">
     <div class="main-navbar">
         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
             <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
@@ -41,6 +41,12 @@
                 <a th:class="nav-link+${activeL}" th:href="@{/dashboard-listing}">
                     <i class="material-icons">note_add</i>
                     <span>Listing</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:class="nav-link+${activeT}" th:href="@{/dashboard-transaction}">
+                    <i class="material-icons">attach_money</i>
+                    <span>Transaction</span>
                 </a>
             </li>
             <li class="nav-item">

@@ -21,7 +21,7 @@
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">Overview</span>
-                <h3 class="page-title">Listing tables</h3>
+                <h3 class="page-title">Listing table</h3>
                 <br>
                 <a class="btn btn-primary button-active" th:href="@{/dashboard-listing}">
                     <i class="fa fa-arrow-left mr-2 ml-2" ></i>Go back</a>
@@ -34,7 +34,7 @@
                     <form th:object="${listingForm}" th:action="@{/listing/create}" method="post">
                         <div class="row">
                             <div class="form-group col-md-6 ">
-                                <label for="movie" class="col-form-label">Province</label>
+                                <label for="movie" class="col-form-label">Movie</label>
                                 <select id="movie" class="custom-select"
                                         th:field="*{movId}">
                                     <option th:value="null">Select a movie</option>
