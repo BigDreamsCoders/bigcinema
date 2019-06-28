@@ -92,7 +92,6 @@ class ListingController{
             model.addAttribute("movie", it)
             val lists = listingService.findByActStatusAndMovieMovId(true, it.movId,
                     pageable).toList()
-            print(lists)
             model.addAttribute("listing", lists)
         }
         model.addAttribute("reservationForm", ReservationForm() )

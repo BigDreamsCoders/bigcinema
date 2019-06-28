@@ -2,10 +2,7 @@ package com.uca.bigdreamscoders.bigcinema.controller
 
 import com.uca.bigdreamscoders.bigcinema.form.ReasonForm
 import com.uca.bigdreamscoders.bigcinema.repositories.AccountRepository
-import com.uca.bigdreamscoders.bigcinema.services.AccountService
-import com.uca.bigdreamscoders.bigcinema.services.ListingService
-import com.uca.bigdreamscoders.bigcinema.services.MovieService
-import com.uca.bigdreamscoders.bigcinema.services.RecordService
+import com.uca.bigdreamscoders.bigcinema.services.*
 import com.uca.bigdreamscoders.bigcinema.utils.GeneralUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -27,6 +24,8 @@ class MainController{
     lateinit var listingService: ListingService
     @Autowired
     lateinit var recordService: RecordService
+    @Autowired
+    lateinit var reservationService : ReservationService
 
 
     @RequestMapping("/dashboard-account", method = [RequestMethod.POST, RequestMethod.GET])
@@ -64,6 +63,12 @@ class MainController{
     fun dashboardRecord(request: HttpServletRequest, model: Model): String{
         model.addAttribute("records", recordService.findAll().toList())
         return "dashboard-record"
+    }
+
+    @RequestMapping("/dashboard-transaction", method = [RequestMethod.POST, RequestMethod.GET])
+    fun reservationSee(request: HttpServletRequest, model: Model, pageable: Pageable): String{
+        model.addAttribute("records" , reservationService.findAll().toList())
+        return "dashboard-transaction"
     }
 
     @RequestMapping("/logout", method = [RequestMethod.POST, RequestMethod.GET])

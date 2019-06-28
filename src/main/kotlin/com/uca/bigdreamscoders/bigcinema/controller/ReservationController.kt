@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 import java.text.SimpleDateFormat
 import java.text.DateFormat
-
+import javax.validation.Valid
 
 
 @Controller
@@ -35,11 +36,22 @@ class ReservationController{
     lateinit var recordService : RecordService
 
     @PostMapping("/movie/{movId}/reservation/new")
-    fun reservationPrepare(reservationForm: ReservationForm, @PathVariable("movId") movId : String,
-            request: HttpServletRequest,  model: Model, pageable: Pageable):String{
+    fun reservationPrepare(@Valid reservationForm: ReservationForm, results:BindingResult,
+                           @PathVariable("movId") movId : String,
+                           request: HttpServletRequest, model: Model, pageable: Pageable):String{
         val accountM = GeneralUtils.returnAccount(request, accountService)
         if(accountM != null){
             model.addAttribute("money", accountM.accBalance)
+        }
+        if(results.hasErrors()) {
+            movieService.findByOne(movId).ifPresent{
+                model.addAttribute("movie", it)
+                val lists = listingService.findByActStatusAndMovieMovId(true, it.movId,
+                        pageable).toList()
+                model.addAttribute("listing", lists)
+            }
+            model.addAttribute("reservationForm", reservationForm)
+            return "view-listing"
         }
         val finalForm = ReviewForm()
         val reservation = Reservation()
@@ -66,7 +78,7 @@ class ReservationController{
 
         listing.ifPresent {
             if(it.avaiSeats-reservationForm.resSeats<0){
-                model.addAttribute("error", "Not enough seats for request")
+                model.addAttribute("error", "Not enough seats for the request")
             }
             finalForm.listingId = it.lisId
             finalForm.requestedSeats = reservationForm.resSeats
@@ -75,7 +87,7 @@ class ReservationController{
         }
 
         if(reservationForm.resSeats>15){
-            model.addAttribute("error", "The maximum amount of seats reserved per purchase is 15")
+            model.addAttribute("error", "The maximum amount of seats per purchase is 15")
         }
 
         when (model.containsAttribute("error")){
@@ -150,4 +162,5 @@ class ReservationController{
         }
         return "redirect:/dashboard-client"
     }
+
 }

@@ -37,8 +37,13 @@
                 <div class="card-header border-bottom">
                     <h6 class="m-0">Billboard available</h6>
                 </div>
-                <ul th:case="*" class="list-group list-group-flush" >
-                    <li th:each="lis : ${listing}" class="custom-controls-stacked list-group-item p-2" >
+                <ul th:case="true" class="list-group list-group-flush">
+                    <li class="custom-controls-stacked list-group-item p-2">
+                        <h4 class="m-0 p-2">Not available yet</h4>
+                    </li>
+                </ul>
+                <ul th:case="*" id="functionTable" class="list-group list-group-flush" >
+                    <li th:each="lis : ${listing}" class="custom-controls-stacked list-group-item p-2 active-listing" >
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <div class="row">
@@ -69,39 +74,57 @@
                             </ul>
 
                     </li>
-                    <form th:object="${reservationForm}" th:action="@{/movie/{movId}/reservation/new(movId=${movie.movId})}" method="post">
-                        <input th:field="*{referenceId}"  type="hidden" name="lisId"  id="secret" th:value="0">
+                    <form th:object="${reservationForm}"
+                          th:action="@{/movie/{movId}/reservation/new(movId=${movie.movId})}" method="post">
+                        <input th:field="*{referenceId}" type="hidden" name="lisId" id="secret" th:value="0">
                         <li class="list-group-item p-2">
-                        <div class="row">
-                            <div class="col-md-2 col-lg-2 ml-auto mr-auto">
-                                <label>Selected</label>
-                                <div class="input-group">
-                                    <input  class="form-control" type="text" th:id="target" disabled>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4">
-                                <label>Credit to use</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">$</span>
-                                    </div>
-                                    <input th:field="*{creditUse}" id="credit" type="number" class="form-control"
-                                           placeholder="Credit to use"
-                                           aria-label="Credit to use" aria-describedby="basic-addon2">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 mr-auto ">
-                                <label>Number of seats</label>
-                                <div class="input-group">
-                                    <input th:field="*{resSeats}" id="reserve" type="number" class="form-control"
-                                           placeholder="Number of seats" aria-label="Number of seats"
-                                           aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Receipt</button>
+                            <div class="row">
+                                <div class="col-md-2 col-lg-2 ml-auto mr-auto">
+                                    <label>Selected</label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" th:id="target" disabled>
                                     </div>
                                 </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Credit to use</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input th:field="*{creditUse}" id="credit" type="number" class="form-control"
+                                               placeholder="Credit to use"
+                                               aria-label="Credit to use" aria-describedby="basic-addon2">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-4 mr-auto ">
+                                    <label>Number of seats</label>
+                                    <div class="input-group">
+                                        <input th:field="*{resSeats}" id="reserve" type="number" class="form-control"
+                                               placeholder="Number of seats" aria-label="Number of seats"
+                                               aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit">Receipt</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="form-group col-md-12 m-0 text-center">
+                                    <span th:if="${#fields.hasErrors('resSeats')}" th:errors="*{resSeats}"
+                                          class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-12 m-0 text-center">
+                                    <span th:if="${#fields.hasErrors('referenceId')}" th:errors="*{referenceId}"
+                                          class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-12 m-0 text-center">
+                                    <span th:if="${#fields.hasErrors('creditUse')}" th:errors="*{creditUse}"
+                                          class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-12 m-0 text-center">
+                                    <span th:text="${error}" class="text-danger"></span>
+                                </div>
+                            </div>
                     </li>
                     </form>
                 </ul>
@@ -118,11 +141,42 @@
 <script th:src="@{/assets/js/shards.min.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
 <script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#barSearch').keyup(function(){
+            search_table($(this).val());
+        });
+        function search_table(value){
+            $('#functionTable .active-listing').each(function(){
+                var found = 'false';
+                $(this).each(function(){
+                    if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    {
+                        found = 'true';
+                    }
+                });
+                if(found == 'true')
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
+        }
+    });
+</script>
 <script  th:inline="javascript">
 
     var target = $("#target");
     var secret = $("#secret");
     var all = document.querySelectorAll(".verify");
+
+    $(document).ready(function () {
+        var value = secret.val();
+        target.attr('value', value);
+    });
 
     $('.verify').click(function(){
         var object = $(this);

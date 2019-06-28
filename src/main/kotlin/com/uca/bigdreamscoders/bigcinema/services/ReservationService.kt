@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import javax.transaction.Transactional
 
 @Service
 class ReservationService {
@@ -15,6 +16,10 @@ class ReservationService {
 
     fun save(reservation: Reservation) = reservationRepository.save(reservation)
 
+    fun findAll() = reservationRepository.findAll()
+
+    @Transactional
     fun findPersonal(accId : String, pageable: Pageable) =
             reservationRepository.findByAccountAccId(accId, pageable)
+
 }
