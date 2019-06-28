@@ -11,4 +11,5 @@ interface ReservationRepository : CrudRepository<Reservation, Int>{
     fun findByListingLisCor(accId: Int?, pageable: Pageable): Page<Reservation>
     fun findByResCorAndAccountAccCor(resId: Int?, accId: Int?): Optional<Reservation>
     fun findByResCorAndListingLisCor(resId: Int?, lisId: Int?): Optional<Reservation>
+    fun findByAccountAccId(accId: String, pageable: Pageable) : Page<Reservation>
 }

@@ -18,16 +18,16 @@ data class Record(
         var description : String ="",
 
         @Column(name = "active_status")
-        var actStatus : Boolean?=false,
+        var actStatus : Boolean=false,
 
         @Column(name = "creation_date")
-        var creationDate : String?="",
+        var creationDate : String="",
 
         @Column(name = "creator_account")
         var creatorAccount : String ="",
 
         @Column(name = "last_modification")
-        var lastModification : String?="",
+        var lastModification : String="",
 
         @Column(name = "last_to_modify")
         var lastToModify : String =""
@@ -36,4 +36,6 @@ data class Record(
     override fun toString(): String = "Province{cor=$recCor, id = $recId , description = $description, " +
             "status = $actStatus, creationDate=$creationDate, creatorAccount = $creatorAccount," +
             "lastModification=$lastModification, lastToModify=$lastToModify}"
+
+        fun delegateRecActive() = if(actStatus) "Active" else "Inactive"
 }

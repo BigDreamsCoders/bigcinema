@@ -3,15 +3,13 @@ package com.uca.bigdreamscoders.bigcinema.controller
 import com.uca.bigdreamscoders.bigcinema.domain.Reservation
 import com.uca.bigdreamscoders.bigcinema.form.ReservationForm
 import com.uca.bigdreamscoders.bigcinema.form.ReviewForm
-import com.uca.bigdreamscoders.bigcinema.services.AccountService
-import com.uca.bigdreamscoders.bigcinema.services.ListingService
-import com.uca.bigdreamscoders.bigcinema.services.MovieService
-import com.uca.bigdreamscoders.bigcinema.services.ReservationService
+import com.uca.bigdreamscoders.bigcinema.services.*
 import com.uca.bigdreamscoders.bigcinema.utils.GeneralUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.math.BigDecimal
@@ -33,11 +31,16 @@ class ReservationController{
     lateinit var listingService: ListingService
     @Autowired
     lateinit var accountService: AccountService
-
+    @Autowired
+    lateinit var recordService : RecordService
 
     @PostMapping("/movie/{movId}/reservation/new")
     fun reservationPrepare(reservationForm: ReservationForm, @PathVariable("movId") movId : String,
             request: HttpServletRequest,  model: Model, pageable: Pageable):String{
+        val accountM = GeneralUtils.returnAccount(request, accountService)
+        if(accountM != null){
+            model.addAttribute("money", accountM.accBalance)
+        }
         val finalForm = ReviewForm()
         val reservation = Reservation()
         val dateFormat = SimpleDateFormat("yyyy/MM/dd")
@@ -56,9 +59,9 @@ class ReservationController{
                 model.addAttribute("error", "Not enough credits in your account")
             }
             finalForm.accountId = it.accId
-            finalForm.usedBalance = BigDecimal.valueOf(reservationForm.creditUse.toLong()+0.00)
+            finalForm.usedBalance = BigDecimal.valueOf(reservationForm.creditUse.toLong()+0.00).setScale(2)
             reservation.account = it
-            reservation.usedBalance = BigDecimal.valueOf(reservationForm.creditUse.toLong()+0.00)
+            reservation.usedBalance = BigDecimal.valueOf(reservationForm.creditUse.toLong()+0.00).setScale(2)
         }
 
         listing.ifPresent {
@@ -88,11 +91,12 @@ class ReservationController{
             }
             else ->{
                 finalForm.dateReserved = dateFormat.format(date)
-                finalForm.grandTotal = reservationForm.creditUse.multiply(BigDecimal.valueOf(reservationForm.resSeats.toLong()))
+                finalForm.grandTotal =  reservation.listing!!.entryFee!!.multiply(BigDecimal.valueOf(reservationForm.resSeats.toLong())).setScale(2)
                 reservation.dateReserved = dateFormat.format(date)
-                reservation.grandTotal = reservationForm.creditUse.multiply(BigDecimal.valueOf(reservationForm.resSeats.toLong()))
+                reservation.grandTotal = reservation.listing!!.entryFee!!.multiply(BigDecimal.valueOf(reservationForm.resSeats.toLong())).setScale(2)
                 model.addAttribute("receipt", reservation)
                 model.addAttribute("finalForm", finalForm)
+
                 return "summary-reservation"
             }
         }
@@ -116,7 +120,7 @@ class ReservationController{
             reservation.grandTotal = bought.grandTotal
             reservation.usedBalance = bought.usedBalance
 
-            reservationService.save(reservation)
+            val returned = reservationService.save(reservation)
 
             lisObj.get().avaiSeats -= bought.requestedSeats
             lisObj.get().reserSeats += bought.requestedSeats
@@ -126,10 +130,24 @@ class ReservationController{
             accountService.save(accObj.get())
 
             reservationService.save(reservation)
+
+            recordService.updateRecord(returned.resId,"CREATE RECORD",true,account!!)
+
             return "redirect:/movie/${lisObj.get().movie!!.movId}/listing"
 
         }
         model.addAttribute("receipt", bought)
         return "summary-reservation"
+    }
+
+    @GetMapping("reservation/see")
+    fun reservationSee(request: HttpServletRequest, model: Model, pageable: Pageable): String{
+        val account = GeneralUtils.returnAccount(request, accountService)
+        if(account != null){
+            model.addAttribute("money", account.accBalance)
+            model.addAttribute("records" , reservationService.findPersonal(account.accId, pageable).toList())
+            return "view-transactions"
+        }
+        return "redirect:/dashboard-client"
     }
 }

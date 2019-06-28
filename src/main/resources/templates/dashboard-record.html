@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
-<aside th:replace="navbars/admin::navbar('',' active','','')"></aside>
+<aside th:replace="navbars/admin::navbar('','','', ' active')"></aside>
 <body>
 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
     <div th:replace="navbars/top-bar-admin::navbar"></div>
@@ -24,48 +24,38 @@
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">Overview</span>
-                <h3 class="page-title">Movie table</h3>
-                <br>
-                <a th:href="@{/movie/prepare}" class="btn btn-primary button-active">Add new movie
-                    <i class="fa fa-plus-square mr-2 ml-2" ></i></a>
+                <h3 class="page-title">Record table</h3>
             </div>
         </div>
-        <div class="row"  th:switch="${#lists.isEmpty(movies)}">
-            <h2 th:case="true">No accounts yet!</h2>
+        <div class="row"  th:switch="${#lists.isEmpty(records)}">
+            <h2 th:case="true">No records yet!</h2>
             <div class="col" th:case="*">
                 <div class="card card-small mb-4">
                     <div class="card-header border-bottom">
                         <h6 class="m-0">Active movies</h6>
                     </div>
                     <div class="card-body p-0 pb-3 text-center">
-                        <table id="movieTable" class="table mb-0">
+                        <table id="recordTable" class="table mb-0">
                             <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0">#</th>
-                                <th scope="col" class="border-0">Name</th>
                                 <th scope="col" class="border-0">Description</th>
-                                <th scope="col" class="border-0">Image Url</th>
-                                <th scope="col" class="border-0">Current status</th>
-                                <th scope="col" class="border-0">Modify active</th>
+                                <th scope="col" class="border-0">Active status</th>
+                                <th scope="col" class="border-0">Creator</th>
+                                <th scope="col" class="border-0">Last to modify</th>
+                                <th scope="col" class="border-0">Creation date</th>
+                                <th scope="col" class="border-0">Modification date</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="mov : ${movies}">
-                                <td th:text="${mov.movId}"></td>
-                                <td th:text="${mov.name}"></td>
-                                <td th:text="${mov.description}"></td>
-                                <td class="d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
-                                        <img class="card-img-top" th:src="${mov.imageUrl}" alt="Card image cap">
-                                    </div>
-                                </td>
-                                <td th:id="${mov.movId}" th:text="${mov.delegateMovActive()}"></td>
-                                <td>
-                                    <button th:value="${mov.movId}" data-toggle="modal"
-                                            data-target="#movModal" class="btn btn-success button-active verify">
-                                        <i class="fa fa-edit mr-2 ml-2"></i>
-                                    </button>
-                                </td>
+                            <tr th:each="rec : ${records}">
+                                <td th:text="${rec.recId}"></td>
+                                <td th:text="${rec.description}"></td>
+                                <td th:text="${rec.delegateRecActive()}"></td>
+                                <td th:text="${rec.creatorAccount}"></td>
+                                <td th:text="${rec.lastToModify}"></td>
+                                <td th:text="${rec.creationDate}"></td>
+                                <td th:text="${rec.lastModification}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -77,48 +67,14 @@
 </main>
 
 
-<div class="modal fade" id="movModal" tabindex="-1" role="dialog"
-     aria-labelledby="movModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form th:object="${reasonForm}" th:action="@{/movie/active}" method="post">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="movModalLabel">Are you sure?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group col-md-12">
-                        <div class="form-group">
-                            <label for="reason">You are about to change a movie status. This action can put at risk
-                                the app</label>
-                            <div id="afk-field">
-                            <textarea th:field="*{reason}" name="reason" id="reason" class="form-control mb-4" rows="3"
-                                      placeholder="Please provide a reason for this action..."></textarea>
-                            </div>
-                            <input th:field="*{id}" name="movId" type="hidden"  id="send" th:value="0">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
-                    <input type="submit" class="btn btn-primary" th:value="Modify">
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script type="text/javascript" th:src="@{/assets/js/modal-admin.js}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $('#barSearch').keyup(function(){
             search_table($(this).val());
         });
         function search_table(value){
-            $('#movieTable tbody tr').each(function(){
+            $('#recordTable tbody tr').each(function(){
                 var found = 'false';
                 $(this).each(function(){
                     if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)

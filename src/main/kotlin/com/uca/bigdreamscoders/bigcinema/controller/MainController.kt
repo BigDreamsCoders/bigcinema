@@ -60,6 +60,12 @@ class MainController{
         return "dashboard-client"
     }
 
+    @RequestMapping("/dashboard-record", method = [RequestMethod.POST, RequestMethod.GET])
+    fun dashboardRecord(request: HttpServletRequest, model: Model): String{
+        model.addAttribute("records", recordService.findAll().toList())
+        return "dashboard-record"
+    }
+
     @RequestMapping("/logout", method = [RequestMethod.POST, RequestMethod.GET])
     fun logOut(request: HttpServletRequest ):String{
         val account = GeneralUtils.returnAccount(request, accountService)

@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
-<aside th:replace="navbars/admin::navbar('','',' active')"></aside>
+<aside th:replace="navbars/admin::navbar('','',' active','')"></aside>
 <body>
 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
     <div th:replace="navbars/top-bar-admin::navbar"></div>
@@ -24,9 +24,9 @@
         <div class="page-header row no-gutters py-4">
             <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span class="text-uppercase page-subtitle">Overview</span>
-                <h3 class="page-title">Listing tables</h3>
+                <h3 class="page-title">Listing table</h3>
                 <br>
-                <a th:href="@{/listing/prepare}" class="btn btn-primary button-active">Add new function
+                <a th:href="@{/listing/prepare}" class="btn btn-primary button-active verify">Add new function
                     <i class="fa fa-plus-square mr-2 ml-2" ></i></a>
             </div>
         </div>
@@ -38,7 +38,7 @@
                         <h6 class="m-0">Active movies</h6>
                     </div>
                     <div class="card-body p-0 pb-3 text-center">
-                        <table class="table mb-0">
+                        <table id="listingTable" class="table mb-0">
                             <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0">#</th>
@@ -91,7 +91,7 @@
                 <div class="modal-body">
                     <div class="form-group col-md-12">
                         <div class="form-group">
-                            <label for="reason">You are about to change a user status. This action can put at risk
+                            <label for="reason">You are about to change a listing status. This action can put at risk
                                 the app</label>
                             <div id="afk-field">
                             <textarea th:field="*{reason}" name="reason" id="reason" class="form-control mb-4" rows="3"
@@ -111,28 +111,37 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
-<script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
-
-<script>
-
-    var reason = document.querySelector("#reason");
-    var accId = document.querySelector("#send");
-    var afk = document.querySelector("#afk-field");
-
-    $('.button-active').click(function(){
-        var fullRow = $(this).val();
-        reason.value= "";
-        afk.style.visibility = "none";
-        var activeStatus = document.getElementById(fullRow);
-        if(activeStatus.innerText === "Active"){
-            afk.style.visibility = "visible";
+<script type="text/javascript" th:src="@{/assets/js/modal-admin.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#barSearch').keyup(function(){
+            search_table($(this).val());
+        });
+        function search_table(value){
+            $('#listingTable tbody tr').each(function(){
+                var found = 'false';
+                $(this).each(function(){
+                    if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    {
+                        found = 'true';
+                    }
+                });
+                if(found == 'true')
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
         }
-        accId.value = fullRow;
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script th:src="@{/assets/js/shards.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
+<script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
 </body>
 </html>

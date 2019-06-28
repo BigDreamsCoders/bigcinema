@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<aside th:replace="navbars/admin::navbar(' active','','')"></aside>
+<aside th:replace="navbars/admin::navbar(' active','','','')"></aside>
 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
 <div class="main-content-container container-fluid px-4">
     <div class="page-header row no-gutters py-4">
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6 ">
-                            <label for="role" class="col-form-label">Province</label>
+                            <label for="role" class="col-form-label">Account role</label>
                             <select id="role" class="custom-select"
                                     th:field="*{accRole}">
                                 <option th:value="null">Select a movie</option>

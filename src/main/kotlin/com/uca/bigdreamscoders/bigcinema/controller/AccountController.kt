@@ -12,11 +12,14 @@ import javax.validation.Valid
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 import com.uca.bigdreamscoders.bigcinema.domain.Account
+import com.uca.bigdreamscoders.bigcinema.domain.Record
 import com.uca.bigdreamscoders.bigcinema.form.AdminRegisterForm
 import com.uca.bigdreamscoders.bigcinema.form.ReasonForm
 import com.uca.bigdreamscoders.bigcinema.form.RegisterForm
 import com.uca.bigdreamscoders.bigcinema.services.ProvinceService
+import com.uca.bigdreamscoders.bigcinema.services.RecordService
 import com.uca.bigdreamscoders.bigcinema.services.StateService
+import com.uca.bigdreamscoders.bigcinema.utils.GeneralUtils
 import org.springframework.web.bind.annotation.PostMapping
 
 
@@ -29,6 +32,8 @@ class AccountController{
     lateinit var stateService: StateService
     @Autowired
     lateinit var provinceService: ProvinceService
+    @Autowired
+    lateinit var recordService: RecordService
 
     @GetMapping("/")
     fun index(session : HttpSession, model: Model): String{
@@ -106,6 +111,7 @@ class AccountController{
                  model.addAttribute("created", "User created")
             }
             accountService.save(newAccount)
+
             model.addAttribute("loginForm", LoginForm())
             return "index"
         }
@@ -136,7 +142,9 @@ class AccountController{
 
     @PostMapping("/account/admin/create")
     fun accountCreateAccount(@Valid adminRegisterForm: AdminRegisterForm,result:BindingResult,
-                      model: Model):String{
+                      model: Model, request: HttpServletRequest):String{
+        val admin = GeneralUtils.returnAccount(request, accountService)
+
         model.addAttribute("account", adminRegisterForm)
         model.addAttribute("states", stateService.findAll())
         model.addAttribute("provinces", provinceService.findAll())
@@ -157,7 +165,8 @@ class AccountController{
                 newAccount.province = it
                 model.addAttribute("message", "Account created")
             }
-            accountService.save(newAccount)
+            val returned=accountService.save(newAccount)
+            recordService.newRecord(returned.accId,"CREATE ACCOUNT",false,admin!!)
             if(!model.containsAttribute("message")){
                 model.addAttribute("error", "Error creating the new account")
             }

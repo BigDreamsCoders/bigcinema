@@ -7,6 +7,7 @@ import com.uca.bigdreamscoders.bigcinema.form.ReservationForm
 import com.uca.bigdreamscoders.bigcinema.services.AccountService
 import com.uca.bigdreamscoders.bigcinema.services.ListingService
 import com.uca.bigdreamscoders.bigcinema.services.MovieService
+import com.uca.bigdreamscoders.bigcinema.services.RecordService
 import com.uca.bigdreamscoders.bigcinema.utils.GeneralUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -27,6 +28,9 @@ class ListingController{
     @Autowired
     lateinit var accountService : AccountService
 
+    @Autowired
+    lateinit var recordService: RecordService
+
     @GetMapping("/listing/prepare")
     fun prepareCreateListing(listingForm: ListingForm, model: Model, pageable: Pageable ): String{
         model.addAttribute("movies", movieService.findByActStatus(true, pageable).toList())
@@ -35,11 +39,13 @@ class ListingController{
     }
 
     @PostMapping("/listing/active")
-    fun active(reasonForm: ReasonForm, reason: String, model: Model): String {
+    fun active(reasonForm: ReasonForm, reason: String, model: Model, request: HttpServletRequest): String {
+        val who = GeneralUtils.returnAccount(request, accountService)
         listingService.findByOne(reasonForm.Id).ifPresent {
             it.actStatus = !it.actStatus
-            //TODO add a record
-            listingService.save(it)
+
+            val returned=listingService.save(it)
+            recordService.updateRecord(returned.lisId,"UPDATE LISTING",it.actStatus,who!!)
             model.addAttribute("message", "Account modified")
         }
         if (!model.containsAttribute("message")) {
@@ -52,7 +58,8 @@ class ListingController{
 
     @PostMapping("/listing/create")
     fun accountCreateAccount(@Valid listingForm: ListingForm, result: BindingResult,
-                             model: Model):String{
+                             model: Model, request: HttpServletRequest):String{
+        val who = GeneralUtils.returnAccount(request, accountService)
         model.addAttribute("listingForm", listingForm)
         if(result.hasErrors()){
             return "create-listing"
@@ -64,7 +71,8 @@ class ListingController{
                 newListing.movie = it
                 model.addAttribute("message", "Listing added")
             }
-            listingService.save(newListing)
+            val returned = listingService.save(newListing)
+            recordService.newRecord(returned.lisId,"CREATE LISTING",false,who!!)
             if(!model.containsAttribute("message")){
                 model.addAttribute("error", "Error creating the new account")
             }
