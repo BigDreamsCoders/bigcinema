@@ -9,37 +9,37 @@ import javax.persistence.*
 
 @Entity(name = "reservation")
 data class Reservation(
-        @Id
-        @GeneratedValue
-        @Column(name = "res_cor")
-        var resCor : Int,
 
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_res_cor_seq")
+        @SequenceGenerator(sequenceName = "reservation_res_cor_seq",  name = "reservation_res_cor_seq")
+        @Column(name = "res_cor",  insertable=false)
+        var resCor : Int?=null,
+
+        @Id
         @Column(name = "res_id")
         var resId : String ="",
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "acc_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "acc_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
-        var account : Account,
+        var account : Account?=null,
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
-        @JoinColumn(name= "lis_id", nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name= "lis_id")
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
-        var listing : Listing,
+        var listing : Listing?=null,
 
         @Column(name = "requested_seats")
-        var requestedSeats : Int,
+        var requestedSeats : Int=0,
 
         @Column(name = "balance_used")
-        var usedBalance : BigDecimal,
+        var usedBalance : BigDecimal= BigDecimal.ZERO,
 
         @Column(name = "grand_total")
-        var grandTotal : BigDecimal,
+        var grandTotal : BigDecimal = BigDecimal.ZERO,
 
         @Column(name = "date_reserved")
-        var dateReserved : Date
+        var dateReserved : String = ""
 )
 {
     override fun toString(): String = "Reservation{cor=$resCor, id = $resId , account = $account, listing = $listing" +

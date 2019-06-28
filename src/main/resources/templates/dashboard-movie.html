@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NCapas</title>
+    <meta name="description"
+          content="A high-quality &amp; free Bootstrap admin dashboard template pack that comes with lots of templates and components.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0"
+          th:href="@{/assets/css/shards-dashboards.1.1.0.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+<aside th:replace="navbars/admin::navbar('',' active','','')"></aside>
+<body>
+<main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
+    <div th:replace="navbars/top-bar-admin::navbar"></div>
+    <div class="main-content-container container-fluid px-4">
+        <div class="page-header row no-gutters py-4">
+            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                <span class="text-uppercase page-subtitle">Overview</span>
+                <h3 class="page-title">Movie table</h3>
+                <br>
+                <a th:href="@{/movie/prepare}" class="btn btn-primary button-active">Add new movie
+                    <i class="fa fa-plus-square mr-2 ml-2" ></i></a>
+            </div>
+        </div>
+        <div class="row"  th:switch="${#lists.isEmpty(movies)}">
+            <h2 th:case="true">No accounts yet!</h2>
+            <div class="col" th:case="*">
+                <div class="card card-small mb-4">
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">Active movies</h6>
+                    </div>
+                    <div class="card-body p-0 pb-3 text-center">
+                        <table id="movieTable" class="table mb-0">
+                            <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">#</th>
+                                <th scope="col" class="border-0">Name</th>
+                                <th scope="col" class="border-0">Description</th>
+                                <th scope="col" class="border-0">Image Url</th>
+                                <th scope="col" class="border-0">Current status</th>
+                                <th scope="col" class="border-0">Modify active</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="mov : ${movies}">
+                                <td th:text="${mov.movId}"></td>
+                                <td th:text="${mov.name}"></td>
+                                <td th:text="${mov.description}"></td>
+                                <td class="d-flex justify-content-center">
+                                    <div class="card" style="width: 20rem;">
+                                        <img class="card-img-top" th:src="${mov.imageUrl}" alt="Card image cap">
+                                    </div>
+                                </td>
+                                <td th:id="${mov.movId}" th:text="${mov.delegateMovActive()}"></td>
+                                <td>
+                                    <button th:value="${mov.movId}" data-toggle="modal"
+                                            data-target="#movModal" class="btn btn-success button-active verify">
+                                        <i class="fa fa-edit mr-2 ml-2"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<div class="modal fade" id="movModal" tabindex="-1" role="dialog"
+     aria-labelledby="movModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form th:object="${reasonForm}" th:action="@{/movie/active}" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="movModalLabel">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <div class="form-group">
+                            <label for="reason">You are about to change a movie status. This action can put at risk
+                                the app</label>
+                            <div id="afk-field">
+                            <textarea th:field="*{reason}" name="reason" id="reason" class="form-control mb-4" rows="3"
+                                      placeholder="Please provide a reason for this action..."></textarea>
+                            </div>
+                            <input th:field="*{id}" name="movId" type="hidden"  id="send" th:value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
+                    <input type="submit" class="btn btn-primary" th:value="Modify">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{/assets/js/modal-admin.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#barSearch').keyup(function(){
+            search_table($(this).val());
+        });
+        function search_table(value){
+            $('#movieTable tbody tr').each(function(){
+                var found = 'false';
+                $(this).each(function(){
+                    if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    {
+                        found = 'true';
+                    }
+                });
+                if(found == 'true')
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
+        }
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script th:src="@{/assets/js/shards.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
+<script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
+
+
+</body>
+</html>
