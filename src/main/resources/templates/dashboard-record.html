@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NCapas</title>
+    <meta name="description"
+          content="A high-quality &amp; free Bootstrap admin dashboard template pack that comes with lots of templates and components.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0"
+          th:href="@{/assets/css/shards-dashboards.1.1.0.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/extras.1.1.0.min.css}">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+<aside th:replace="navbars/admin::navbar('','','', ' active')"></aside>
+<body>
+<main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
+    <div th:replace="navbars/top-bar-admin::navbar"></div>
+    <div class="main-content-container container-fluid px-4">
+        <div class="page-header row no-gutters py-4">
+            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                <span class="text-uppercase page-subtitle">Overview</span>
+                <h3 class="page-title">Record table</h3>
+            </div>
+        </div>
+        <div class="row"  th:switch="${#lists.isEmpty(records)}">
+            <h2 th:case="true">No records yet!</h2>
+            <div class="col" th:case="*">
+                <div class="card card-small mb-4">
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">Active movies</h6>
+                    </div>
+                    <div class="card-body p-0 pb-3 text-center">
+                        <table id="recordTable" class="table mb-0">
+                            <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="border-0">#</th>
+                                <th scope="col" class="border-0">Description</th>
+                                <th scope="col" class="border-0">Active status</th>
+                                <th scope="col" class="border-0">Creator</th>
+                                <th scope="col" class="border-0">Last to modify</th>
+                                <th scope="col" class="border-0">Creation date</th>
+                                <th scope="col" class="border-0">Modification date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="rec : ${records}">
+                                <td th:text="${rec.recId}"></td>
+                                <td th:text="${rec.description}"></td>
+                                <td th:text="${rec.delegateRecActive()}"></td>
+                                <td th:text="${rec.creatorAccount}"></td>
+                                <td th:text="${rec.lastToModify}"></td>
+                                <td th:text="${rec.creationDate}"></td>
+                                <td th:text="${rec.lastModification}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#barSearch').keyup(function(){
+            search_table($(this).val());
+        });
+        function search_table(value){
+            $('#recordTable tbody tr').each(function(){
+                var found = 'false';
+                $(this).each(function(){
+                    if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    {
+                        found = 'true';
+                    }
+                });
+                if(found == 'true')
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
+        }
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script th:src="@{/assets/js/shards.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
+<script type="text/javascript"  th:src="@{/assets/js/extras.1.1.0.min.js}"></script>
+
+
+</body>
+</html>

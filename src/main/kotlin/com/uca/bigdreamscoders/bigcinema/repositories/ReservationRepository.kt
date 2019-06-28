@@ -7,7 +7,9 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface ReservationRepository : CrudRepository<Reservation, Int>{
-    fun findByProId(accId: Int?, pageable: Pageable): Page<Reservation>
-    fun findByIdAndAccId(resId: Int?, accId: Int?): Optional<Reservation>
-    fun findByIdAndLisId(resId: Int?, lisId: Int?): Optional<Reservation>
+    fun findByAccountAccCor(accId: Int?, pageable: Pageable): Page<Reservation>
+    fun findByListingLisCor(accId: Int?, pageable: Pageable): Page<Reservation>
+    fun findByResCorAndAccountAccCor(resId: Int?, accId: Int?): Optional<Reservation>
+    fun findByResCorAndListingLisCor(resId: Int?, lisId: Int?): Optional<Reservation>
+    fun findByAccountAccId(accId: String, pageable: Pageable) : Page<Reservation>
 }

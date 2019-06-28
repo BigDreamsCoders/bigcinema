@@ -7,6 +7,10 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface ListingRepository : CrudRepository<Listing, Int>{
-    fun findByMovId(movId: Int?, pageable: Pageable): Page<Listing>
-    fun findByIdAndMovId(lisId: Int?, movId: Int?): Optional<Listing>
+    fun findByMovieMovCor(movId: Int?, pageable: Pageable): Page<Listing>
+    fun findByMovieMovIdAndActStatus(movId:String, actStatus : Boolean,  pageable: Pageable) : Page<Listing>
+
+    fun findByLisCorAndMovieMovCor(lisId: Int?, movId: Int?): Optional<Listing>
+    fun findByLisId(lisId :String) : Optional<Listing>
+
 }
