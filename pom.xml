@@ -11,7 +11,7 @@
     <groupId>com.uca.bigdreamscoders</groupId>
     <artifactId>bigcinema</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>bigcinema</name>
     <description>Proyecto final de Programación N-Capas</description>
 
